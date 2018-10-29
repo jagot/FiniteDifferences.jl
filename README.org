@@ -1,0 +1,15 @@
+#+TITLE: FiniteDifferences.jl
+#+AUTHOR: Stefanos Carlström
+#+EMAIL: stefanos.carlstrom@gmail.com
+
+Very simple Julia package for finite-differences for radially
+symmetric problems, with a Dirichlet0 boundary condition at r=0.
+
+* References
+  - Schafer, K. J., Gaarde, M. B., Kulander, K. C., Sheehy, B., &
+    DiMauro, L. F. (2000). Calculations of strong field multiphoton
+    processes in alkali metal atoms. AIP Conference Proceedings, 525(1),
+    45–58. http://dx.doi.org/10.1063/1.1291925
+  
+  - Schafer, K. J. (2009). Numerical methods in strong field physics. In
+    T. Brabec (Eds.), (pp. 111–145). : Springer.
