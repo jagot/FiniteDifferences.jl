@@ -3,7 +3,7 @@ module FiniteDifferences
 using LinearAlgebra
 using SparseArrays
 
-import Base: show
+import Base: eltype, show
 
 struct Basis{T}
     j::Base.OneTo
@@ -17,6 +17,8 @@ Basis(n::I, ρ::T, Z::T=one(T)) where {I<:Integer, T} =
 
 # Basis(rₘₐₓ::T, n::I, Z::T=one(T)) where {I<:Integer,T} =
 #     Basis{T}(n, rₘₐₓ/(n-1/2), Z)
+
+eltype(::Basis{T}) where T = T
 
 locs(basis::Basis{T}) where T = (basis.j .- 1/2)*basis.ρ
 
@@ -45,17 +47,18 @@ function β(basis::Basis)
     b
 end
 
-function derop(basis::Basis{T}, o::Integer) where T
+function derop(::Type{U}, basis::Basis{T}, o::Integer) where {U,T}
     o ∉ 0:2 && error("Unsupported derivative order $(o) ∉ 0:2")
     if o == 0
         basis(I)
     elseif o == 1
         a = α.(basis.j[1:end-1])
-        Tridiagonal(-a, zeros(T, length(basis.j)), a)/2basis.ρ
+        Tridiagonal{U}(-a, zeros(T, length(basis.j)), a)/2basis.ρ
     else
-        SymTridiagonal(-2β(basis), α.(basis.j[1:end-1]))/basis.ρ^2
+        SymTridiagonal{U}(-2β(basis), α.(basis.j[1:end-1]))/basis.ρ^2
     end        
 end
+derop(basis::Basis{T}, o::Integer) where T = derop(T, basis, o)
 
 show(io::IO, basis::Basis) = 
     write(io, "Finite differences basis with $(length(basis.j)) points spaced by ρ = $(basis.ρ)")
