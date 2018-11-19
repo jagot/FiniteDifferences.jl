@@ -22,6 +22,11 @@ eltype(::Basis{T}) where T = T
 
 locs(basis::Basis{T}) where T = (basis.j .- 1/2)*basis.ρ
 
+function (basis::Basis)(D::Diagonal)
+    n = length(basis.j)
+    @assert size(D) == (n,n)
+    D
+end
 (basis::Basis)(f::Function) = Diagonal(f.(locs(basis)))
 (basis::Basis)(::UniformScaling) = I
 
