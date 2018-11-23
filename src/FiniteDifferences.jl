@@ -15,7 +15,7 @@ end
 function Basis(n::I, ρ::T, j₀::I, Z::T=one(T)) where {I<:Integer, T}
     j₀ < zero(I) && throw(ArgumentError("Illegal starting point of grid"))
     j = (1:n) .+ j₀
-    Basis{T}(j, ρ, Z, j₀ == 1 ? (Z*ρ/8 * (one(T) + Z*ρ)) : zero(T))
+    Basis{T}(j, ρ, Z, j₀ == 0 ? (Z*ρ/8 * (one(T) + Z*ρ)) : zero(T))
 end
 
 Basis(n::I, ρ::T, Z::T=one(T), r₀::T=zero(T)) where {I<:Integer, T} =
