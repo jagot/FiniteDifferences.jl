@@ -6,14 +6,20 @@ using SparseArrays
 import Base: eltype, show
 
 struct Basis{T}
-    j::Base.OneTo
+    j::UnitRange{Integer}
     ρ::T
     Z::T
     δβ₁::T # Correction used for bare Coulomb potentials, Eq. (22) Schafer2009
 end
 
-Basis(n::I, ρ::T, Z::T=one(T)) where {I<:Integer, T} =
-    Basis{T}(Base.OneTo(n), ρ, Z, Z*ρ/8 * (one(T) + Z*ρ))
+function Basis(n::I, ρ::T, j₀::I, Z::T=one(T)) where {I<:Integer, T}
+    j₀ < zero(I) && throw(ArgumentError("Illegal starting point of grid"))
+    j = (1:n) .+ j₀
+    Basis{T}(j, ρ, Z, j₀ == 1 ? (Z*ρ/8 * (one(T) + Z*ρ)) : zero(T))
+end
+
+Basis(n::I, ρ::T, Z::T=one(T), r₀::T=zero(T)) where {I<:Integer, T} =
+    Basis(n, ρ, floor(Int, r₀/ρ), Z)
 
 # Basis(rₘₐₓ::T, n::I, Z::T=one(T)) where {I<:Integer,T} =
 #     Basis{T}(n, rₘₐₓ/(n-1/2), Z)
